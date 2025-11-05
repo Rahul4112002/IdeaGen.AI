@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IdeaGen.AI - AI Startup Idea Generator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 800px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        h1 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+            text-align: center;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+        }
+        
+        input[type="text"] {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        button {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+        }
+        
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        
+        .result {
+            margin-top: 30px;
+            padding: 25px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            display: none;
+        }
+        
+        .result.show {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .result-section {
+            margin-bottom: 25px;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .result-section h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .result-section p {
+            color: #333;
+            line-height: 1.8;
+            font-size: 1.05em;
+            white-space: pre-wrap;
+        }
+        
+        .result-section ul {
+            margin-left: 20px;
+            color: #333;
+            line-height: 1.8;
+        }
+        
+        .result-section li {
+            margin-bottom: 8px;
+        }
+        
+        .loader {
+            text-align: center;
+            color: #667eea;
+            display: none;
+            margin-top: 20px;
+        }
+        
+        .loader.show {
+            display: block;
+        }
+        
+        .error {
+            background: #fee;
+            color: #c33;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            display: none;
+        }
+        
+        .error.show {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧠 IdeaGen.AI</h1>
+        <p class="subtitle">AI-Powered Startup Idea Generator</p>
+        
+        <form id="ideaForm">
+            <div class="input-group">
+                <label for="interests">Enter Your Interests (comma-separated)</label>
+                <input 
+                    type="text" 
+                    id="interests" 
+                    name="interests" 
+                    placeholder="e.g., AI, Healthcare, Mobile Apps, Education"
+                    required
+                />
+            </div>
+            
+            <button type="submit" id="generateBtn">
+                Generate Startup Idea ✨
+            </button>
+        </form>
+        
+        <div class="loader" id="loader">
+            <p>🤖 AI is thinking... Please wait</p>
+        </div>
+        
+        <div class="error" id="error"></div>
+        
+        <div class="result" id="result">
+            <div class="result-section">
+                <h3>💡 Idea Title</h3>
+                <p id="ideaTitle"></p>
+            </div>
+            
+            <div class="result-section">
+                <h3>❓ Problem Statement</h3>
+                <p id="problemStatement"></p>
+            </div>
+            
+            <div class="result-section">
+                <h3>✅ Solution</h3>
+                <p id="solution"></p>
+            </div>
+            
+            <div class="result-section">
+                <h3>🎯 Target Audience</h3>
+                <p id="targetAudience"></p>
+            </div>
+            
+            <div class="result-section">
+                <h3>📈 Market Potential</h3>
+                <p id="marketPotential"></p>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Get form and result elements
+        const form = document.getElementById('ideaForm');
+        const loader = document.getElementById('loader');
+        const result = document.getElementById('result');
+        const error = document.getElementById('error');
+        const generateBtn = document.getElementById('generateBtn');
+        
+        // Handle form submission
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();  // Prevent page reload
+            
+            // Get user input
+            const interests = document.getElementById('interests').value;
+            
+            // Hide previous results and errors
+            result.classList.remove('show');
+            error.classList.remove('show');
+            
+            // Show loader and disable button
+            loader.classList.add('show');
+            generateBtn.disabled = true;
+            generateBtn.textContent = 'Generating...';
+            
+            try {
+                // Call our API endpoint
+                const response = await fetch('/generate', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ interests: interests })
+                });
+                
+                // Check if request was successful
+                if (!response.ok) {
+                    throw new Error('Failed to generate idea');
+                }
+                
+                // Get the JSON response
+                const data = await response.json();
+                
+                // Helper function to format text with bullet points
+                function formatText(text) {
+                    // If text contains bullet points or numbered lists, preserve them
+                    if (text.includes('\n-') || text.includes('\n•') || text.includes('\n1.')) {
+                        return text;
+                    }
+                    // Otherwise return as is
+                    return text;
+                }
+                
+                // Display the results with proper formatting
+                document.getElementById('ideaTitle').innerHTML = `<strong>${data.idea_title}</strong>`;
+                document.getElementById('problemStatement').textContent = formatText(data.problem_statement);
+                document.getElementById('solution').textContent = formatText(data.solution);
+                document.getElementById('targetAudience').textContent = formatText(data.target_audience);
+                document.getElementById('marketPotential').textContent = formatText(data.market_potential);
+                
+                // Show result section
+                result.classList.add('show');
+                
+            } catch (err) {
+                // Show error message
+                error.textContent = 'Error: ' + err.message;
+                error.classList.add('show');
+            } finally {
+                // Hide loader and re-enable button
+                loader.classList.remove('show');
+                generateBtn.disabled = false;
+                generateBtn.textContent = 'Generate Startup Idea ✨';
+            }
+        });
+    </script>
+</body>
+</html>
