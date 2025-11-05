@@ -257,22 +257,7 @@ http://127.0.0.1:8000
 User Input → FastAPI → LangChain → Groq AI → Response Parser → JSON → Frontend Display
 ```
 
----
 
-## 📸 Screenshots
-
-### Homepage
-![Homepage](screenshots/homepage.png)
-
-### Generated Idea
-![Generated Idea](screenshots/result.png)
-
-### Loading State
-![Loading](screenshots/loading.png)
-
-> **Note:** Add actual screenshots to a `screenshots/` directory in your project
-
----
 
 ## 🔮 Future Enhancements
 
@@ -340,10 +325,4 @@ This tool is for educational and brainstorming purposes. Generated ideas should 
 
 ---
 
-<div align="center">
 
-**Made with ❤️ using AI and Python**
-
-⭐ Star this repo if you found it helpful!
-
-</div>
