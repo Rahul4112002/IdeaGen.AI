@@ -11,9 +11,13 @@ An intelligent web application that generates innovative startup ideas based on 
 
 ## 🎥 Demo Video
 
-> **[Watch the Demo Video Here](#)** *(Add your demo video link here)*
+> **[Watch the Demo Video Here](#)** *(
 
-![IdeaGen.AI Demo](demo-screenshot.png) *(Add a screenshot of your application)*
+https://github.com/user-attachments/assets/d2a84f9d-c844-4594-a61e-1645d122c1cd
+
+)*
+
+
 
 ---
 
